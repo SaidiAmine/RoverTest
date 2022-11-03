@@ -1,4 +1,6 @@
-package rover;
+package rover.models;
+
+import rover.exceptions.OutOfBoundariesException;
 
 public class GeographicPosition {
     private int actualX;
@@ -13,7 +15,6 @@ public class GeographicPosition {
         this.actualY = 0;
         this.maximumX = maximumX;
         this.maximumY = maximumY;
-//        this.orientation = orientation;
     }
 
     public void setActualX(int actualX) {

@@ -1,18 +1,21 @@
 package rover;
 
 
-import static rover.Orientation.*;
+import rover.models.Command;
+import rover.models.GeographicPosition;
+import rover.models.Orientation;
+
+import static rover.models.Orientation.*;
 
 public class Rover {
     private GeographicPosition geographicPosition;
-//    private Orientation orientation;
+    private String roverCommands;
 
     public Rover(GeographicPosition geographicPosition) {
         this.geographicPosition = geographicPosition;
-//        this.orientation = orientation;
     }
 
-    public void executeCommand(Command command) {
+    private void executeCommand(Command command) {
         if(RoverExerciseHelper.commandRotations.contains(command)) {
             rotate(command);
         } else if (command.equals(Command.MOVE)) {
@@ -25,35 +28,45 @@ public class Rover {
         }
     }
 
+    public void executeCommands() {
+        for(char ch : roverCommands.toCharArray()) {
+            executeCommand(RoverExerciseHelper.parseCommandFromLetter(String.valueOf(ch)));
+        }
+    }
+
     public void rotate(Command command) {
         if(command.equals(Command.RIGHT)) {
-            testrefactor(EAST, SOUTH, WEST, NORTH);
+            chooseRotation(EAST, SOUTH, WEST, NORTH);
         } else if (command.equals(Command.LEFT)) {
-            testrefactor((Orientation) WEST, (Orientation) NORTH, (Orientation) EAST, (Orientation) SOUTH);
+            chooseRotation(WEST, NORTH, EAST, SOUTH);
         }
     }
 
-    private void testrefactor(Orientation east, Orientation south, Orientation west, Orientation north) {
+    private void chooseRotation(Orientation one, Orientation two, Orientation three, Orientation four) {
         switch (geographicPosition.getOrientation()) {
             case NORTH:
-                geographicPosition.setOrientation(east);
+                geographicPosition.setOrientation(one);
                 break;
             case EAST:
-                geographicPosition.setOrientation(south);
+                geographicPosition.setOrientation(two);
                 break;
             case SOUTH:
-                geographicPosition.setOrientation(west);
+                geographicPosition.setOrientation(three);
                 break;
             case WEST:
-                geographicPosition.setOrientation(north);
+                geographicPosition.setOrientation(four);
                 break;
         }
     }
 
-//    public void turnLeft() {
-//        switch (this.orientation) {
-//            case NORTH :
-//                break;
-//        }
-//    }
+    public void setRoverCommands(String roverCommands) {
+        this.roverCommands = roverCommands;
+    }
+
+    @Override
+    public String toString() {
+        return "Rover Orientation: "+geographicPosition.getOrientation()
+                +" - X: "+geographicPosition.getActualX()+" - Y: "+geographicPosition.getActualY();
+    }
+
 }

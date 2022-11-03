@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyFileReader {
@@ -14,11 +15,10 @@ public class MyFileReader {
     private BufferedReader br;
     private List<String> commandLines;
 
-//    private String line;
-//
     public MyFileReader() throws IOException {
         file = new File(FILE_PATH);
         br = new BufferedReader(new FileReader(file));
+        commandLines = new ArrayList<>();
         readLines();
     }
 

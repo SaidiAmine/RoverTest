@@ -1,5 +1,10 @@
 package rover;
 
+import rover.exceptions.ProcessingCommandsException;
+import rover.models.Command;
+import rover.models.GeographicPosition;
+import rover.models.Orientation;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,42 +12,33 @@ import java.util.stream.Collectors;
 public class RoverExerciseHelper {
     public static List<Command> commandRotations = List.of(Command.RIGHT, Command.LEFT);
     public static List<Integer> parsePlateauXY(String commandLine) {
-//        List<Integer> XY = new ArrayList<>();
         return Arrays.stream(commandLine.split("\\s+"))
                 .toList()
                 .stream().map(s -> Integer.parseInt(s))
                 .collect(Collectors.toList());
-//        var myvar = commandLines.stream().s ;
-//        String[] strArray = commandLines
-//                .split("\\s+")
-//                .findFirst()
-//                .get();
-//        return XY;
     }
 
-    public static void populateGeographicPosition(GeographicPosition geographicPosition, String commandLine) {
+    public static void populateGeographicPosition(GeographicPosition geographicPosition, String commandLine) throws ProcessingCommandsException {
         var result = commandLine.split("\\s+");
         geographicPosition.setActualX(Integer.parseInt(result[0]));
         geographicPosition.setActualY(Integer.parseInt(result[1]));
         geographicPosition.setOrientation(getOrientationFromLetter(result[2]));
-//        GeographicPosition geographicPosition =
-//                new GeographicPosition(Integer.parseInt(result[0]), Integer.parseInt(result[1]),
-//                        getOrientationFromLetter(result[2]));
-//        return null;
     }
 
-    private static Orientation getOrientationFromLetter(String n) {
-        Orientation orientation = null;
-        switch (n) {
-            case "N" : orientation = Orientation.NORTH;
-            case "S" : orientation = Orientation.SOUTH;
-            case "E" : orientation = Orientation.EAST;
-            case "W" : orientation =  Orientation.WEST;
-        }
-        return orientation;
+    private static Orientation getOrientationFromLetter(String n) throws ProcessingCommandsException {
+        if(n.equals("N"))
+            return Orientation.NORTH;
+        if(n.equals("E"))
+            return Orientation.EAST;
+        if(n.equals("W"))
+            return Orientation.WEST;
+        if(n.equals("S"))
+            return Orientation.SOUTH;
+        else
+            throw new ProcessingCommandsException("Error while parsing Orientation.");
     }
 
-    private static Command parseCommandFromLetter(String n) throws Exception {
+    public static Command parseCommandFromLetter(String n) throws ProcessingCommandsException {
         if(n.equals("M"))
             return Command.MOVE;
         if(n.equals("L"))
@@ -50,6 +46,6 @@ public class RoverExerciseHelper {
         if(n.equals("R"))
             return Command.RIGHT;
         else
-            throw new Exception();
+            throw new ProcessingCommandsException("Error while parsing Command.");
     }
 }
